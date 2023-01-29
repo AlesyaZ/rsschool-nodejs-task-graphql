@@ -172,17 +172,19 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         throw this.httpErrors.notFound('Not found user');
       }
 
-      try {
-        const userSubscribed = idUser.subscribedToUserIds.filter(
-          (userSubscribedId) => userSubscribedId !== id
-        );
+      const usersubscribedId = idUser.subscribedToUserIds.includes(id);
 
-        return await this.db.users.change(userID, {
-          subscribedToUserIds: userSubscribed,
-        });
-      } catch {
+      if (!usersubscribedId) {
         throw this.httpErrors.badRequest('Invalid user');
       }
+
+      const userSubscribed = idUser.subscribedToUserIds.filter(
+        (userSubscribedId) => userSubscribedId !== id
+      );
+
+      return await this.db.users.change(userID, {
+        subscribedToUserIds: userSubscribed,
+      });
     }
   );
 

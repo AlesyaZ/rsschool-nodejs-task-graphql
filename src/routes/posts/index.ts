@@ -51,7 +51,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       });
 
       if (!getUser) {
-        throw this.httpErrors.badRequest('Not found user');
+        throw this.httpErrors.badRequest('Invalid user');
       }
 
       return reply.send(post);
@@ -70,7 +70,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         const id = request.params.id;
         return await this.db.posts.delete(id);
       } catch {
-        throw this.httpErrors.badRequest('Not found post');
+        throw this.httpErrors.badRequest('Invalid post');
       }
     }
   );
@@ -90,7 +90,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
 
         return await this.db.posts.change(id, body);
       } catch {
-        throw this.httpErrors.badRequest('Not found post');
+        throw this.httpErrors.badRequest('Invalid post');
       }
     }
   );

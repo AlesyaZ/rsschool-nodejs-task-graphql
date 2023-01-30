@@ -1,10 +1,31 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { graphql, GraphQLObjectType, GraphQLSchema } from 'graphql';
-import { getMemberType, getMemberTypes } from './member-types';
-import { createPostResolver, getPost, getPosts } from './posts';
-import { createProfileResolver, getProfile, getProfiles } from './profiles';
+import {
+  getMemberType,
+  getMemberTypes,
+  updateMemberTypeResolver,
+} from './member-types';
+import {
+  createPostResolver,
+  getPost,
+  getPosts,
+  updatePostResolver,
+} from './posts';
+import {
+  createProfileResolver,
+  getProfile,
+  getProfiles,
+  updateProfileResolver,
+} from './profiles';
 import { graphqlBodySchema } from './schema';
-import { createUserResolver, getUser, getUsers } from './users';
+import {
+  createUserResolver,
+  getUser,
+  getUsers,
+  subscribeUserResolver,
+  unsubscribeUserResolver,
+  updateUserResolver,
+} from './users';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
@@ -37,6 +58,12 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
           createUser: createUserResolver,
           createProfile: createProfileResolver,
           createPost: createPostResolver,
+          updateUser: updateUserResolver,
+          updateProfile: updateProfileResolver,
+          updatePost: updatePostResolver,
+          updateMemberType: updateMemberTypeResolver,
+          subscribeUserTo: subscribeUserResolver,
+          unsubscribeUserFrom: unsubscribeUserResolver,
         },
       });
 

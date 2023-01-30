@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { GraphQLList, GraphQLString } from 'graphql';
 import { PostEntity } from '../../../utils/DB/entities/DBPosts';
-import { createPostInput } from './input';
+import { createPostInput, updatePostInput } from './input';
 import { PostsTypes } from './type';
 
 export const getPosts = {
@@ -60,5 +60,30 @@ export const createPostResolver = {
     }
 
     return post;
+  },
+};
+
+export const updatePostResolver = {
+  type: new GraphQLList(PostsTypes),
+  args: {
+    input: { type: updatePostInput },
+    inputId: { type: GraphQLString },
+  },
+  resolve: async (
+    source: any,
+    {
+      inputId,
+      input,
+    }: {
+      inputId: string;
+      input: Partial<Omit<PostEntity, 'id' | 'userId'>>;
+    },
+    fastify: FastifyInstance
+  ) => {
+    try {
+      return await fastify.db.posts.change(inputId, input);
+    } catch {
+      throw fastify.httpErrors.badRequest('Invalid post');
+    }
   },
 };

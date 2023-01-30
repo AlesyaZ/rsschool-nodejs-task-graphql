@@ -8,3 +8,12 @@ export const createPostInput = new GraphQLInputObjectType({
     userId: { type: new GraphQLNonNull(GraphQLString) },
   }),
 });
+
+export const updatePostInput = new GraphQLInputObjectType({
+  name: 'UpdatePostInput',
+  fields: () => ({
+    title: { type: GraphQLString },
+    content: { type: GraphQLString },
+    userId: { type: GraphQLString },
+  }),
+});

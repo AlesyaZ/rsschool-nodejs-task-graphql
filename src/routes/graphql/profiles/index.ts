@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { GraphQLList, GraphQLString } from 'graphql';
 import { ProfileEntity } from '../../../utils/DB/entities/DBProfiles';
-import { createProfileInput } from './input';
+import { createProfileInput, updateProfileInput } from './input';
 import { ProfilesTypes } from './type';
 
 export const getProfiles = {
@@ -70,5 +70,35 @@ export const createProfileResolver = {
     const profile = await fastify.db.profiles.create(input);
 
     return profile;
+  },
+};
+
+export const updateProfileResolver = {
+  type: new GraphQLList(ProfilesTypes),
+  args: {
+    inputId: { type: GraphQLString },
+    input: { type: updateProfileInput },
+  },
+  resolve: async (
+    source: any,
+    {
+      inputId,
+      input,
+    }: {
+      inputId: string;
+      input: Partial<Omit<ProfileEntity, 'id' | 'userId'>>;
+    },
+    fastify: FastifyInstance
+  ) => {
+    const profile = await fastify.db.profiles.findOne({
+      key: 'id',
+      equals: inputId,
+    });
+
+    if (!profile) {
+      throw fastify.httpErrors.notFound('Not found Profile');
+    }
+
+    return await fastify.db.profiles.change(inputId, input);
   },
 };

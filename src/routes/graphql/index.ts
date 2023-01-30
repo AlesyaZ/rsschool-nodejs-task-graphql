@@ -1,5 +1,31 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
+import { graphql, GraphQLObjectType, GraphQLSchema } from 'graphql';
+import {
+  getMemberType,
+  getMemberTypes,
+  updateMemberTypeResolver,
+} from './member-types';
+import {
+  createPostResolver,
+  getPost,
+  getPosts,
+  updatePostResolver,
+} from './posts';
+import {
+  createProfileResolver,
+  getProfile,
+  getProfiles,
+  updateProfileResolver,
+} from './profiles';
 import { graphqlBodySchema } from './schema';
+import {
+  createUserResolver,
+  getUser,
+  getUsers,
+  subscribeUserResolver,
+  unsubscribeUserResolver,
+  updateUserResolver,
+} from './users';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
@@ -11,7 +37,51 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         body: graphqlBodySchema,
       },
     },
-    async function (request, reply) {}
+    async function (request, reply) {
+      const Query = new GraphQLObjectType({
+        name: 'Query',
+        fields: {
+          users: getUsers,
+          profiles: getProfiles,
+          posts: getPosts,
+          memberTypes: getMemberTypes,
+          user: getUser,
+          profile: getProfile,
+          post: getPost,
+          memberType: getMemberType,
+        },
+      });
+
+      const Mutation = new GraphQLObjectType({
+        name: 'Mutation',
+        fields: {
+          createUser: createUserResolver,
+          createProfile: createProfileResolver,
+          createPost: createPostResolver,
+          updateUser: updateUserResolver,
+          updateProfile: updateProfileResolver,
+          updatePost: updatePostResolver,
+          updateMemberType: updateMemberTypeResolver,
+          subscribeUserTo: subscribeUserResolver,
+          unsubscribeUserFrom: unsubscribeUserResolver,
+        },
+      });
+
+      const schema = new GraphQLSchema({
+        query: Query,
+        mutation: Mutation,
+      });
+
+      const queryBody: any = request.body.query;
+      const variablesBody = request.body.variables;
+
+      return await graphql({
+        schema,
+        source: String(queryBody),
+        variableValues: variablesBody,
+        contextValue: fastify,
+      });
+    }
   );
 };
 

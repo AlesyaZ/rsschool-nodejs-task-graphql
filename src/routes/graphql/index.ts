@@ -1,10 +1,10 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { graphql, GraphQLObjectType, GraphQLSchema } from 'graphql';
-import { getMemberTypes } from './member-types';
-import { getPosts } from './posts';
-import { getProfiles } from './profiles';
+import { getMemberType, getMemberTypes } from './member-types';
+import { getPost, getPosts } from './posts';
+import { getProfile, getProfiles } from './profiles';
 import { graphqlBodySchema } from './schema';
-import { getUsers } from './users';
+import { getUser, getUsers } from './users';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
@@ -24,6 +24,10 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
           profiles: getProfiles,
           posts: getPosts,
           memberTypes: getMemberTypes,
+          user: getUser,
+          profile: getProfile,
+          post: getPost,
+          memberType: getMemberType,
         },
       });
 

@@ -16,7 +16,7 @@ export const getMemberTypes = {
 };
 
 export const getMemberType = {
-  type: new GraphQLList(MemberTypes),
+  type: MemberTypes,
   args: {
     id: { type: GraphQLString },
   },
@@ -39,7 +39,7 @@ export const getMemberType = {
 };
 
 export const updateMemberTypeResolver = {
-  type: new GraphQLList(MemberTypes),
+  type: MemberTypes,
   args: {
     inputId: { type: GraphQLString },
     input: { type: updateMemberTypeInput },

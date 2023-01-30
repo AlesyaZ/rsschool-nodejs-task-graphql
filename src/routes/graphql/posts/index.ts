@@ -16,7 +16,7 @@ export const getPosts = {
 };
 
 export const getPost = {
-  type: new GraphQLList(PostsTypes),
+  type: PostsTypes,
   args: {
     id: { type: GraphQLString },
   },
@@ -39,7 +39,7 @@ export const getPost = {
 };
 
 export const createPostResolver = {
-  type: new GraphQLList(PostsTypes),
+  type: PostsTypes,
   args: {
     input: { type: createPostInput },
   },
@@ -48,8 +48,6 @@ export const createPostResolver = {
     { input }: { input: Omit<PostEntity, 'id'> },
     fastify: FastifyInstance
   ): Promise<PostEntity> {
-    const post = await fastify.db.posts.create(input);
-
     const getUser = await fastify.db.users.findOne({
       key: 'id',
       equals: input.userId,
@@ -58,13 +56,14 @@ export const createPostResolver = {
     if (!getUser) {
       throw fastify.httpErrors.badRequest('Invalid user');
     }
+    const post = await fastify.db.posts.create(input);
 
     return post;
   },
 };
 
 export const updatePostResolver = {
-  type: new GraphQLList(PostsTypes),
+  type: PostsTypes,
   args: {
     input: { type: updatePostInput },
     inputId: { type: GraphQLString },

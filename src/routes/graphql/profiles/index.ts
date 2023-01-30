@@ -16,7 +16,7 @@ export const getProfiles = {
 };
 
 export const getProfile = {
-  type: new GraphQLList(ProfilesTypes),
+  type: ProfilesTypes,
   args: {
     id: { type: GraphQLString },
   },
@@ -39,7 +39,7 @@ export const getProfile = {
 };
 
 export const createProfileResolver = {
-  type: new GraphQLList(ProfilesTypes),
+  type: ProfilesTypes,
   args: {
     input: { type: createProfileInput },
   },
@@ -74,7 +74,7 @@ export const createProfileResolver = {
 };
 
 export const updateProfileResolver = {
-  type: new GraphQLList(ProfilesTypes),
+  type: ProfilesTypes,
   args: {
     inputId: { type: GraphQLString },
     input: { type: updateProfileInput },

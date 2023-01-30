@@ -53,12 +53,13 @@ export const createPostResolver = {
       equals: input.userId,
     });
 
-    if (!getUser) {
-      throw fastify.httpErrors.badRequest('Invalid user');
-    }
     const post = await fastify.db.posts.create(input);
 
-    return post;
+    if (getUser && post) {
+      return post;
+    }
+
+    throw fastify.httpErrors.badRequest('Invalid user');
   },
 };
 

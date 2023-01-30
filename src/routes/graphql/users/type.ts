@@ -1,4 +1,5 @@
 import {
+  GraphQLID,
   GraphQLInt,
   GraphQLList,
   GraphQLObjectType,
@@ -8,7 +9,7 @@ import {
 export const UsersTypes = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    id: { type: GraphQLString },
+    id: { type: GraphQLID },
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },
     email: { type: GraphQLString },

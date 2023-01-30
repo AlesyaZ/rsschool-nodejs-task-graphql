@@ -1,9 +1,14 @@
-import { GraphQLInt, GraphQLObjectType, GraphQLString } from 'graphql';
+import {
+  GraphQLID,
+  GraphQLInt,
+  GraphQLObjectType,
+  GraphQLString,
+} from 'graphql';
 
 export const ProfilesTypes = new GraphQLObjectType({
   name: 'Profile',
   fields: () => ({
-    id: { type: GraphQLString },
+    id: { type: GraphQLID },
     avatar: { type: GraphQLString },
     sex: { type: GraphQLString },
     birthday: { type: GraphQLInt },

@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { GraphQLList, GraphQLString } from 'graphql';
 import { PostEntity } from '../../../utils/DB/entities/DBPosts';
+import { createPostInput } from './input';
 import { PostsTypes } from './type';
 
 export const getPosts = {
@@ -31,6 +32,31 @@ export const getPost = {
 
     if (!post) {
       throw fastify.httpErrors.notFound('Not found POST');
+    }
+
+    return post;
+  },
+};
+
+export const createPostResolver = {
+  type: new GraphQLList(PostsTypes),
+  args: {
+    input: { type: createPostInput },
+  },
+  async resolve(
+    source: string,
+    { input }: { input: Omit<PostEntity, 'id'> },
+    fastify: FastifyInstance
+  ): Promise<PostEntity> {
+    const post = await fastify.db.posts.create(input);
+
+    const getUser = await fastify.db.users.findOne({
+      key: 'id',
+      equals: input.userId,
+    });
+
+    if (!getUser) {
+      throw fastify.httpErrors.badRequest('Invalid user');
     }
 
     return post;

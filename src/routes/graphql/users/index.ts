@@ -1,6 +1,8 @@
 import { FastifyInstance } from 'fastify';
 import { GraphQLList, GraphQLString } from 'graphql';
+import { Omit } from 'ts-toolbelt/out/Object/_api';
 import { UserEntity } from '../../../utils/DB/entities/DBUsers';
+import { createUserInput } from './input';
 import { UsersTypes } from './type';
 
 export const getUsers = {
@@ -32,6 +34,22 @@ export const getUser = {
     if (!user) {
       throw fastify.httpErrors.notFound('Not found user');
     }
+
+    return user;
+  },
+};
+
+export const createUserResolver = {
+  type: UsersTypes,
+  args: {
+    input: { type: createUserInput },
+  },
+  async resolve(
+    source: string,
+    { input }: { input: Omit<UserEntity, 'id'> },
+    fastify: FastifyInstance
+  ) {
+    const user = await fastify.db.users.create(input);
 
     return user;
   },
